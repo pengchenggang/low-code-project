@@ -1,3 +1,4 @@
+import { WinKeyboard } from '@/enums/editPageEnum'
 // 内置字符串函数键值列表
 export const excludeParseEventValueList = [
   // 请求里的函数语句
@@ -103,5 +104,83 @@ export const evalFn = (fn) => {
  export const componentInstall = (key, node)  => {
   if(!window['$vue'].component(key) && node) {
     window['$vue'].component(key, node)
+  }
+}
+
+/**
+ * * 设置按下键盘按键的底部展示
+ * @param keyCode
+ * @returns
+ */
+export const setKeyboardDressShow = (keyCode) => {
+  const code = new Map([
+    [17, WinKeyboard.CTRL],
+    [32, WinKeyboard.SPACE]
+  ])
+
+  const dom = document.getElementById('keyboard-dress-show')
+  if (!dom) return
+  if (!keyCode) {
+    window.onKeySpacePressHold?.(false)
+    dom.innerText = ''
+    return
+  }
+  if (keyCode && code.has(keyCode)) {
+    if (keyCode == 32) window.onKeySpacePressHold?.(true)
+    dom.innerText = `按下了「${code.get(keyCode)}」键`
+  }
+}
+
+// 处理键盘记录
+export const keyRecordHandle = () => {
+  // 默认赋值
+  window.$KeyboardActive = {
+    ctrl: false,
+    space: false
+  }
+
+  document.onkeydown = (e) => {
+    const { keyCode } = e
+    if (keyCode == 32 && e.target == document.body) e.preventDefault()
+
+    console.info('onkeydown e.keyCode', e.keyCode)
+
+
+    if ([17, 32].includes(keyCode) && window.$KeyboardActive) {
+      switch (keyCode) {
+        case 17:
+          window.$KeyboardActive.ctrl = true
+          break
+        case 32: {
+          window.$KeyboardActive.space = true
+          const previewBoxDom = document.querySelector('.go-preview')
+          if (previewBoxDom && previewBoxDom.style.position === 'absolute') {
+            previewBoxDom.style.cursor = 'grab'
+          }
+          break
+        }
+      }
+    }
+  }
+
+  document.onkeyup = (e) => {
+    const { keyCode } = e
+    if (keyCode == 32 && e.target == document.body) e.preventDefault()
+
+    if ([17, 32].includes(keyCode) && window.$KeyboardActive) {
+      switch (keyCode) {
+        case 17:
+          window.$KeyboardActive.ctrl = false
+          break
+        case 32:
+          window.$KeyboardActive.space = false
+          break
+      }
+    }
+
+    const previewBoxDom = document.querySelector('.go-preview')
+    if (previewBoxDom) {
+      previewBoxDom.style.cursor = 'default'
+    }
   }
 }

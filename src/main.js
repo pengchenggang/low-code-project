@@ -9,6 +9,8 @@ import router from './router'
 
 import { setupCustomComponents } from '@/plugins/plugins.js'
 
+import { setupNaive } from '@/plugins/naive.js'
+
 const app = createApp(App)
 
 // app.use(createPinia())
@@ -19,6 +21,7 @@ app.use(router)
 // 注册全局自定义组件 这里是全部自己的模块组件 全部加载
 // 后期再看动态加载
 setupCustomComponents(app)
+setupNaive(app)
 
 app.mount('#app')
 
