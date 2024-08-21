@@ -33,7 +33,7 @@ keyRecordHandle()
       </template>
       <template #content>
         <!-- 标尺 -->
-        <edit-sketch-rule></edit-sketch-rule>
+        <!-- <edit-sketch-rule></edit-sketch-rule> -->
         <!-- 组件列表 应该放在画布里面，回头放 -->
         <drawingList></drawingList>
         <!-- <chartsItemBox></chartsItemBox> -->
